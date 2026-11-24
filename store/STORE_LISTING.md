@@ -17,6 +17,9 @@ A TIMER YOU START FROM THE ADDRESS BAR
 • Type bbt, a space, then a time: bbt 5m Stretch and drink water, bbt 90s, bbt 2:30 Group work.
 • The big screen shows a bubble tea whose ice melts and whose tea lightens as time runs out.
 
+BREAK IDEAS
+• Movement, learn-and-move, recall and rest breaks, each with steps on the big screen, grounded in classroom research.
+
 LESSON PLANS
 • Build a run of timers (Do now, Group work, Pack up) that moves on by itself, and share plans with other teachers.
 

@@ -233,7 +233,7 @@ store.on(ch => { if ("timerHistory" in ch) drawRecent(ch.timerHistory || []); if
   S = { ...D, ...saved }; T = st.timer || null;
   $("#flavour").value = S.flavour; $("#boba").value = S.boba; $("#sound").checked = S.sound; $("#motion").checked = S.motion; $("#noRepeat").checked = S.noRepeat; $("#sep").value = S.sep; $("#list").value = S.names; $("#hideList").checked = S.hideList; $("#remember").checked = S.remember; $("#rememberMsg").checked = S.rememberMsg; $("#rememberMsg").disabled = !S.remember;
   $("#numFrom").value = S.numFrom; $("#numTo").value = S.numTo; $("#openAs").value = S.openAs; $("#remind").checked = st.remind !== false;
-  if (!EXT) document.querySelector('label.sw:has(#remind)')?.lastChild && (document.querySelector('label.sw:has(#remind)').lastChild.textContent = " Break reminder every hour (while this page is open)");
+  if (!EXT) document.querySelector('label.sw:has(#remind)')?.lastChild && (document.querySelector('label.sw:has(#remind)').lastChild.textContent = " Hourly break reminder");
   document.querySelector('[data-s="300"]').setAttribute("aria-pressed", "true"); drawPearls(); placeStraw(); drawPicker(); suggestLink(); drawRecent(st.timerHistory || []);
   const q = new URLSearchParams(location.search); if (q.get("pick")) openPicker(); if (q.get("welcome")) { $("#msg").textContent = "Welcome! Choose a time, or type bbt 5m in the address bar."; toggle("#setBtn", "#settings", true); }
   if (T && T.paused == null && T.endAt <= Date.now()) { if (q.get("done")) finish(); else doneShown = true; }

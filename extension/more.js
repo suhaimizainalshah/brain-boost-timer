@@ -10,9 +10,9 @@ const unb64 = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g,
 const pmsg = t => { $("#planMsg").textContent = ""; setTimeout(() => $("#planMsg").textContent = t, 20); };
 
 /* ---------- panels: open, close (✕ or Esc) ---------- */
-const panels = { plans: "#planBtn", names: "#namesBtn", settings: "#setBtn" };
+const panels = { ideas: "#ideasBtn", plans: "#planBtn", names: "#namesBtn", settings: "#setBtn" };
 const opened = []; // the order panels were opened, so Esc closes the latest
-const SIDE = ["plans", "names"]; // these share the space beside the timer, like tabs: only one shows at a time
+const SIDE = ["ideas", "plans", "names"]; // these share the space beside the timer, like tabs: only one shows at a time
 for (const id of Object.keys(panels)) new MutationObserver(() => { const i = opened.indexOf(id); if (i >= 0) opened.splice(i, 1);
   if ($("#" + id).hidden) return; opened.push(id);
   if (SIDE.includes(id)) for (const other of SIDE) if (other !== id && !$("#" + other).hidden) { $("#" + other).hidden = true; $(panels[other])?.setAttribute("aria-expanded", "false"); }
@@ -20,6 +20,7 @@ for (const id of Object.keys(panels)) new MutationObserver(() => { const i = ope
 }).observe($("#" + id), { attributes: true, attributeFilter: ["hidden"] });
 const show = (id, on) => { const p = $("#" + id); p.hidden = !on; $(panels[id])?.setAttribute("aria-expanded", String(on)); };
 $("#planBtn").onclick = () => show("plans", $("#plans").hidden);
+$("#ideasBtn").onclick = () => show("ideas", $("#ideas").hidden);
 document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => { show(b.dataset.close, false); $(panels[b.dataset.close])?.focus(); });
 addEventListener("keydown", e => {
   if (document.querySelector("dialog[open]") || !$("#welcome").hidden) return;
@@ -114,6 +115,40 @@ function fromHash() { const m = location.hash.match(/^#plan=([\w-]+)$/);
   if (m) { try { loadShared(fromCode(m[1]), "A shared plan:"); } catch { show("plans", true); pmsg("That plan link couldn’t be read."); } }
   if (location.hash === "#gallery") { show("plans", true); $(".share").open = true; $("#planBrowse").click(); } }
 addEventListener("hashchange", fromHash);
+
+/* ---------- break ideas: movement, learning while moving, recall and rest, with suggested lengths ---------- */
+const KINDS = { move: "Move", learn: "Learn and move", recall: "Recall", rest: "Rest" };
+const IDEAS = [
+  ["move", "Stretch and reach", 2, ["Stand up behind your chair", "Reach up tall and hold for 10", "Lean slowly left, then right", "Roll your shoulders back five times", "Shake out your hands and sit down"]],
+  ["move", "Jog on the spot", 3, ["Stand with space around you", "Jog on the spot for 30 seconds", "Ten star jumps (or step-jacks)", "Jog again for 30 seconds", "Slow down, breathe and sit"]],
+  ["move", "Simon says", 4, ["One leader gives actions", "Only follow when they say “Simon says”", "Keep the actions big: reach, twist, march", "Swap leaders halfway"]],
+  ["move", "Walk and talk", 10, ["Pair up", "Walk around the room or corridor", "Talk about the question on the board", "Come back ready to share one idea"]],
+  ["learn", "True or false: stand or sit", 4, ["Listen to a statement about today’s lesson", "Stand if it’s true, sit if it’s false", "Explain your choice to a neighbour", "Next statement"]],
+  ["learn", "Four corners", 5, ["Each corner is A, B, C or D", "Hear a multiple-choice question", "Walk to the corner with your answer", "One person per corner explains why"]],
+  ["learn", "Count and jump", 3, ["Count together in a times table, such as 7s", "Jump or clap on every multiple", "Speed up a little each round"]],
+  ["learn", "Act it out", 4, ["In small groups, choose a word or process from the lesson", "Act it out without words", "Other groups guess what it is"]],
+  ["recall", "Brain dump", 3, ["Write down everything you remember from today", "No notes, no talking", "Compare with a partner and add what you missed"]],
+  ["recall", "Turn and teach", 3, ["Pair up", "Explain one idea from today in 60 seconds", "Swap: your partner explains another", "Ask each other one question"]],
+  ["recall", "Three-question quiz", 4, ["Answer three quick questions from memory", "Check the answers together", "Note one thing to look at again"]],
+  ["rest", "Breathe", 2, ["Sit comfortably, feet on the floor", "Breathe in for 4", "Hold for 4", "Breathe out for 4", "Repeat quietly"]],
+  ["rest", "Look far away", 1, ["Look away from the screen and the page", "Find something far away, such as out of a window", "Let your eyes rest on it"]],
+  ["rest", "Quiet minute", 1, ["Heads down or eyes closed", "Quiet, no talking", "Notice your breathing"]]];
+let kindNow = "all", lastIdea = null;
+const myIdeas = () => (S.myIdeas || []).map(i => [i.k, i.n, i.m, i.s, true]);
+const allIdeas = () => [...IDEAS, ...myIdeas()];
+function drawIdeas() { $("#ideaKinds").innerHTML = [["all", "All"], ...Object.entries(KINDS)].map(([k, n]) => `<button class="chip" data-k="${k}" aria-pressed="${k === kindNow}">${n}</button>`).join("");
+  $("#ideaKind").innerHTML = Object.entries(KINDS).map(([k, n]) => `<option value="${k}">${n}</option>`).join("");
+  $("#ideaList").innerHTML = allIdeas().map((x, i) => [x, i]).filter(([x]) => kindNow === "all" || x[0] === kindNow).map(([[k, n, m, st, mine], i]) => `<li><div class="top"><span class="kind k-${k}">${KINDS[k]}</span><b>${escH(n)}</b><span class="hint">${m} min</span><button class="btn sm" data-use="${i}">Use</button>${mine ? `<button class="btn sm" data-forget="${i}" aria-label="Remove ${escH(n)}">✕</button>` : ""}</div><ol>${st.map(s => `<li>${escH(s)}</li>`).join("")}</ol></li>`).join(""); }
+function useIdea(i) { const [k, n, m, st] = allIdeas()[i]; lastIdea = i; S.idea = { k, n, st }; save(); $("#custom").value = m + "m"; $("#message").value = n; $("#start").click(); showIdea(); say(`${n}: ${m} minutes. ${st.join(". ")}.`); }
+function showIdea() { const c = $("#ideaCard"), i = S.idea, running = T && T.message === i?.n; c.hidden = !running; if (running) c.innerHTML = `<h3><span class="kind k-${i.k}">${KINDS[i.k]}</span>${escH(i.n)}</h3><ol>${i.st.map(s => `<li>${escH(s)}</li>`).join("")}</ol>`; }
+$("#ideaKinds").onclick = e => { const b = e.target.closest("[data-k]"); if (b) { kindNow = b.dataset.k; drawIdeas(); } };
+$("#ideaList").onclick = e => { const u = e.target.closest("[data-use]"), f = e.target.closest("[data-forget]"); if (u) useIdea(+u.dataset.use);
+  if (f) { const n = allIdeas()[+f.dataset.forget][1]; S.myIdeas = (S.myIdeas || []).filter(x => x.n !== n); save(); drawIdeas(); } };
+$("#ideaSurprise").onclick = () => { const pool = allIdeas().map((x, i) => [x, i]).filter(([x, i]) => (kindNow === "all" || x[0] === kindNow) && i !== lastIdea); if (pool.length) useIdea(pool[Math.floor(Math.random() * pool.length)][1]); };
+$("#ideaAdd").onclick = () => { const n = $("#ideaName").value.trim(), st = $("#ideaSteps").value.split(/\n+/).map(s => s.trim()).filter(Boolean); if (!n || !st.length) return say("Give the idea a name and at least one step.");
+  S.myIdeas = [...(S.myIdeas || []), { k: $("#ideaKind").value, n: n.slice(0, 40), m: Math.max(1, Math.min(30, +$("#ideaMin").value || 3)), s: st.slice(0, 8).map(x => x.slice(0, 120)) }]; save(); $("#ideaName").value = $("#ideaSteps").value = ""; kindNow = $("#ideaKind").value; drawIdeas(); say(`Added ${n}.`); };
+setInterval(showIdea, 500); drawIdeas();
+if (location.protocol === "chrome-extension:") $("#eduLink").href = SITE + "for-educators.html"; // the extension links to the page on the website
 drawSteps(); drawSaved(); setTimeout(fromHash, 50);
 };
 if (window.__bbtReady) bbtMore(); else addEventListener("bbt-ready", bbtMore, { once: true }); // after bbt.js has loaded the saved settings

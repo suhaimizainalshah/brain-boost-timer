@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Brain Boost Time(r): Break Reminder, Class Timer and Name Picker",
   "short_name": "BBT",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Hourly break reminders, a melting bubble tea class timer (type bbt 5m in the address bar) and a boba name picker.",
   "icons": {
     "16": "icons/icon16.png",

@@ -46,7 +46,7 @@ main{display:grid;grid-template-columns:minmax(240px,1fr) minmax(260px,1fr) auto
 .ph{display:flex;align-items:center;justify-content:space-between;gap:8px}.ph h2{margin:0}.btn.x{padding:6px 10px;line-height:1}.btn.sm{padding:4px 10px;font-size:13px}
 /* lesson plans */
 .steps{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:st}
-.steps li{display:grid;grid-template-columns:auto 1fr 84px auto auto auto;gap:4px;align-items:center;counter-increment:st}
+.steps li{display:grid;grid-template-columns:auto minmax(0,1fr) 72px auto auto auto;gap:4px;align-items:center;counter-increment:st}
 .steps li::before{content:counter(st);font-weight:800;color:var(--muted);width:1.2em;text-align:right}
 .steps input{font:inherit;font-size:14px;min-width:0;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--ink)}
 .steps .btn{padding:5px 8px}.share{border-top:1px solid var(--line);padding-top:8px}.share summary{cursor:pointer;font-weight:700}
@@ -69,3 +69,16 @@ header .btn[aria-expanded="true"]{background:var(--acc);border-color:var(--acc);
 main>.names{align-self:start}
 .btn svg.ic{width:1.05em;height:1.05em;vertical-align:-.14em;margin-right:.35em}
 .names .row{justify-content:flex-start}
+
+/* one fixed width for the side panel, whichever is open, so switching between Lesson plan and Picker never moves the cup or timer */
+main:has(> .names:not([hidden])){grid-template-columns:minmax(240px,1fr) minmax(260px,1fr) 380px}
+main>.names{width:100%;min-width:0}.names input,.names select,.names textarea{min-width:0}
+@media (max-width:980px){main:has(> .names:not([hidden])){grid-template-columns:1fr}}
+
+/* break ideas */
+.idealist{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:46vh;overflow:auto}.idealist>li{border:1px solid var(--line);border-radius:12px;padding:8px 10px;display:grid;gap:4px;background:var(--card)}
+.idealist .top{display:flex;gap:8px;align-items:center}.idealist b{flex:1}.kind{font-size:11.5px;font-weight:800;padding:1px 8px;border-radius:999px;color:#fff}
+.k-move{background:#c2410c}.k-learn{background:#7c3aed}.k-recall{background:#0369a1}.k-rest{background:#15803d}.idealist ol{margin:0;padding-left:18px;font-size:13.5px}.idealist ol li{border:0;padding:0;background:none}
+.ideacard{margin:10px auto 0;max-width:560px;border:2px solid var(--line);border-radius:16px;padding:10px 14px;background:var(--card);text-align:left}.ideacard h3{margin:0 0 4px;font-size:17px;display:flex;gap:8px;align-items:center}.ideacard ol{margin:0;padding-left:20px}
+body.giant .ideacard{display:block!important;max-width:min(70vw,900px);font-size:min(2.6vw,3.2vh)}body.giant .ideacard h3{font-size:min(3vw,3.8vh)}
+.why p{font-size:13.5px;margin:6px 0}

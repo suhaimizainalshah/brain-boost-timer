@@ -10,6 +10,7 @@
   <span class="sp"></span>
   <label class="sw"><input type="checkbox" id="remind"> Hourly break reminders</label>
   <button class="btn" id="setBtn" aria-expanded="false" aria-controls="settings">Flavour and settings</button>
+  <button class="btn" id="ideasBtn" aria-expanded="false" aria-controls="ideas">Break ideas</button>
   <button class="btn" id="planBtn" aria-expanded="false" aria-controls="plans">Lesson plan</button>
   <button class="btn" id="namesBtn" aria-expanded="false" aria-controls="names">Picker</button>
 </header>
@@ -57,6 +58,7 @@
   <section class="timer" aria-label="Timer">
     <div class="time" id="time" aria-live="off">5:00</div>
     <div class="msg" id="msg">Ready for Brain Boost Time</div>
+    <div class="ideacard" id="ideaCard" hidden aria-live="polite"></div>
     <p class="stepline" id="stepLine" hidden><span id="stepText"></span> <button class="btn sm" id="stepSkip" title="Go to the next step now">Next step ▸</button></p>
     <div class="row recent" id="recent" aria-label="Your timers"></div>
     <div class="row presets"><button class="btn" data-s="60">1 min</button><button class="btn" data-s="180">3 min</button><button class="btn" data-s="300">5 min</button><button class="btn" data-s="600">10 min</button></div>
@@ -68,6 +70,23 @@
     <p class="giant-hint" aria-hidden="true">Space: start or pause · F or Esc: leave full screen</p>
     <p class="sr" id="live" aria-live="polite"></p>
   </section>
+  <aside class="names ideas" id="ideas" hidden aria-label="Break ideas">
+    <div class="ph"><h2>Break ideas</h2><button class="btn x" data-close="ideas" aria-label="Close break ideas" title="Close (Esc)">✕</button></div>
+    <div class="chips" id="ideaKinds" role="group" aria-label="Kind of break"></div>
+    <div class="row"><button class="btn pri" id="ideaSurprise">🎲 Surprise me with a break</button></div>
+    <ul class="idealist" id="ideaList"></ul>
+    <details><summary>Add your own break idea</summary>
+      <label class="fld">Name <input id="ideaName" maxlength="40" placeholder="e.g. Times-table relay"></label>
+      <div class="row"><label class="fld">Kind <select id="ideaKind"></select></label><label class="fld">Minutes <input id="ideaMin" type="number" min="1" max="30" value="3" style="width:5em"></label></div>
+      <label class="fld">Steps, one per line <textarea id="ideaSteps" rows="3" placeholder="Stand behind your chair&#10;…"></textarea></label>
+      <button class="btn" id="ideaAdd">Add idea</button></details>
+    <details class="why"><summary>Why breaks help, and what the evidence says</summary>
+      <p>Classroom movement improves <b>time on task</b>: a meta-analysis found classroom physical activity increased on-task and reduced off-task behaviour (Watson et al., 2017). Short active breaks that <b>include lesson content</b> are a recognised form of this.</p>
+      <p>Length and effort matter: behaviour improved after <b>longer moderate breaks (over 10 minutes)</b> or <b>shorter, more intense ones (about 5 minutes)</b> (Daly-Smith et al., 2018).</p>
+      <p>Short rest breaks of 10 minutes or less give small boosts to <b>energy</b> and reduce <b>fatigue</b>; longer breaks help performance more (Albulescu et al., 2022).</p>
+      <p>Be cautious about bigger claims: there is not yet consistent evidence that breaks raise test scores. And ideas such as Brain Gym and “learning styles” are neuromyths, so they aren’t included here (Dekker et al., 2012).</p>
+      <p class="hint">Watson, A. et al. (2017) International Journal of Behavioral Nutrition and Physical Activity, 14, 114. Daly-Smith, A. et al. (2018) BMJ Open Sport &amp; Exercise Medicine, 4, e000341. Albulescu, P. et al. (2022) PLOS ONE, 17(8), e0272460. Dekker, S. et al. (2012) Frontiers in Psychology, 3, 429.</p><p><a href="for-educators.html" id="eduLink" target="_blank" rel="noopener">For educators: more on the research →</a></p></details>
+  </aside>
   <aside class="names plans" id="plans" hidden aria-label="Lesson plan">
     <div class="ph"><h2>Lesson plan</h2><button class="btn x" data-close="plans" aria-label="Close the lesson plan" title="Close (Esc)">✕</button></div>
     <p class="hint">A run of timers that moves on by itself, with a chime and what’s next: such as Do now, Group work, Pack up.</p>

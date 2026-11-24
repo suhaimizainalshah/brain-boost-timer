@@ -78,6 +78,27 @@ Nothing leaves your browser. Settings and names are kept in Chrome’s local sto
 `alarms` (timers and the minute count), `notifications` (time’s up), `storage` (settings and names), `idle` (so idle time doesn’t count) and `contextMenus` (the right-click menu). No access to websites.
 
 
+
+## Break ideas
+Fourteen ready-made breaks in four kinds, each with a suggested length and simple steps, plus your own:
+- **Move**, such as stretching, jogging on the spot or walk and talk.
+- **Learn and move:** movement with lesson content, such as true-or-false stand or sit, four corners, or count and jump.
+- **Recall:** seated retrieval, such as a brain dump or turn and teach.
+- **Rest:** breathing, looking far away, or a quiet minute.
+
+**Use** starts the timer and shows the steps on the big screen (in full screen too); **Surprise me** picks one.
+
+**The evidence, stated carefully:**
+- Classroom physical activity improves on-task behaviour (Watson et al., 2017), and short active breaks that include curriculum content are a recognised form of it.
+- Behaviour improved after longer moderate breaks (over 10 minutes) or shorter, more intense ones (about 5 minutes) (Daly-Smith et al., 2018).
+- Micro-breaks of 10 minutes or less give small boosts to energy and reduce fatigue (Albulescu et al., 2022).
+- There isn’t yet consistent evidence that breaks raise test scores, and neuromyth-based programmes such as Brain Gym and “learning styles” are left out (Dekker et al., 2012).
+
+References: Watson, A. et al. (2017) *Int. J. Behav. Nutr. Phys. Act.* 14, 114. Daly-Smith, A. et al. (2018) *BMJ Open Sport & Exercise Medicine* 4, e000341. Albulescu, P. et al. (2022) *PLOS ONE* 17(8), e0272460. Dekker, S. et al. (2012) *Frontiers in Psychology* 3, 429.
+
+## A steady layout
+Break ideas, Lesson plan and Picker share one fixed-width column beside the timer, one at a time, so switching between them never moves the cup or the timer.
+
 ## Lesson plans
 - **Build a plan:** open **Lesson plan**, name it, and add steps (such as Do now 5 min, Group work 10 min, Pack up 2 min). Reorder with the arrows; up to 20 steps of up to 3 hours each.
 - **Run it:** each step moves on by itself, with a chime and what comes next. The step shows under the timer and in the toolbar menu, with **Next step** to move on early. In the extension, plans carry on with the big screen closed.

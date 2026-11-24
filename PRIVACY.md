@@ -1,0 +1,2 @@
+# Privacy: Brain Boost Time(r)
+Brain Boost Time(r) collects no personal data and sends nothing anywhere. Your settings, timers and the names you paste are stored only in this browser (Chrome’s local storage) and can be removed by uninstalling the extension. It does not read the websites you visit. The `idle` permission only tells it whether you are active, so idle time isn’t counted towards a break reminder.

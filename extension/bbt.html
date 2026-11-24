@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brain Boost Time(r)</title><link rel="icon" href="icons/logo.svg" type="image/svg+xml"><link rel="icon" href="icons/icon32.png" type="image/png" sizes="32x32"><link rel="stylesheet" href="bbt.css">
+<style>.omni{margin:8px 0 0;font-size:12.5px;line-height:1.5;color:inherit;opacity:.92}.omni b{font-weight:700}.omni kbd{font:600 11.5px ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid rgba(127,127,127,.45);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:rgba(127,127,127,.12);white-space:nowrap}</style></head>
+<body>
+<header>
+  <img src="icons/icon48.png" alt="" width="34" height="34"><h1>Brain Boost Time(r)</h1>
+  <span class="sp"></span>
+  <label class="sw"><input type="checkbox" id="remind"> Hourly break reminders</label>
+  <button class="btn" id="setBtn" aria-expanded="false" aria-controls="settings">Flavour and settings</button>
+  <button class="btn" id="planBtn" aria-expanded="false" aria-controls="plans">Lesson plan</button>
+  <button class="btn" id="namesBtn" aria-expanded="false" aria-controls="names">Picker</button>
+</header>
+<div class="settings" id="settings" hidden>
+  <label>Flavour <select id="flavour"></select></label>
+  <label>Boba <select id="boba"><option value="black">Black</option><option value="brown">Dark brown</option><option value="grey">Grey</option><option value="match">Match the flavour (popping boba)</option></select></label>
+  <label class="sw"><input type="checkbox" id="sound" checked> Sound</label>
+  <label class="sw"><input type="checkbox" id="motion" checked> Animation</label>
+  <label>Chime <select id="chime"><option value="chime">Chime</option><option value="bell">Bell</option><option value="soft">Soft</option></select></label>
+  <span class="hint" id="weekCount"></span>
+  <label class="sw"><input type="checkbox" id="remember" checked> Remember my timers</label>
+  <label class="sw"><input type="checkbox" id="rememberMsg" checked> …and their messages</label>
+  <span class="hint">Kept only on this device. On a shared computer, consider not remembering messages.</span>
+  <span class="hint ext-only">Click the toolbar icon for the menu. It’s in colour when break reminders are on, grey when off, and shows the time left on a running timer. Alt+Shift+B opens this screen.</span>
+  <label class="ext-only">Open as <select id="openAs"><option value="window">Its own window</option><option value="tab">A tab</option></select></label>
+  <button class="btn web-only" id="notify" hidden>Allow notifications</button>
+  <span class="hint ext-only">Tip: type <kbd>bbt</kbd>, a space and <kbd>5m</kbd> in the address bar to start a timer from anywhere.</span>
+</div>
+<main>
+  <section class="stage" aria-label="Bubble tea">
+    <div class="tea-wrap">
+      <svg id="tea" viewBox="0 0 400 600" role="group" aria-label="A bubble tea. The straw picks a name">
+        <defs>
+          <linearGradient id="liq" x1="0" y1="0" x2="0" y2="1"><stop id="s1" offset="0"/><stop id="s2" offset="1"/></linearGradient>
+          <clipPath id="cupClip"><path d="M78 150 L322 150 L292 560 Q290 578 272 578 L128 578 Q110 578 108 560 Z"/></clipPath>
+          <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".2" stop-color="#fff" stop-opacity=".05"/><stop offset=".85" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".35"/></linearGradient>
+        </defs>
+        <path d="M78 150 L322 150 L292 560 Q290 578 272 578 L128 578 Q110 578 108 560 Z" class="cup"/>
+        <g clip-path="url(#cupClip)">
+          <rect id="liquid" x="0" y="200" width="400" height="420" fill="url(#liq)"/>
+          <g id="bobas"></g><g id="ice"></g>
+        </g>
+        <g id="strawG" role="button" tabindex="0" aria-label="The straw: pick a name">
+          <polygon id="straw" points="236,512 258,512 300,8 278,8"/>
+          <polygon points="236,512 258,512 300,8 278,8" fill="url(#glass)" pointer-events="none"/>
+        </g>
+        <path d="M78 150 L322 150 L292 560 Q290 578 272 578 L128 578 Q110 578 108 560 Z" fill="url(#glass)" pointer-events="none"/>
+        <rect x="62" y="132" width="276" height="24" rx="10" class="rim"/>
+        <g id="flying"></g>
+      </svg>
+      <div class="bubble" id="bubble" hidden aria-hidden="true" title="Click to hide"></div>
+    </div>
+    <div class="row"><button class="btn" id="stir" title="Stir the drink (S)">🌀 Stir</button><button class="btn" id="surprise" title="A random flavour and boba (R)">🎲 Surprise me</button><span class="hint">Drag the straw to tilt it. Click it to pick.</span></div>
+  </section>
+  <section class="timer" aria-label="Timer">
+    <div class="time" id="time" aria-live="off">5:00</div>
+    <div class="msg" id="msg">Ready for Brain Boost Time</div>
+    <p class="stepline" id="stepLine" hidden><span id="stepText"></span> <button class="btn sm" id="stepSkip" title="Go to the next step now">Next step ▸</button></p>
+    <div class="row recent" id="recent" aria-label="Your timers"></div>
+    <div class="row presets"><button class="btn" data-s="60">1 min</button><button class="btn" data-s="180">3 min</button><button class="btn" data-s="300">5 min</button><button class="btn" data-s="600">10 min</button></div>
+    <div class="row"><label class="fld">Custom time <input id="custom" placeholder="2:30 or 90s" size="9" aria-describedby="customHint"></label><label class="fld grow">Message (optional) <input id="message" placeholder="Stretch and drink water"></label></div>
+    <p class="hint" id="customHint">Times like 2:30, 90s, 5m or 1h.</p>
+    <p class="omni ext-only" style="text-align:center"><b>From any tab:</b> type <kbd>bbt</kbd> in the address bar, a space, then <kbd>5m Stretch</kbd> and press Enter. Also <kbd>bbt pick</kbd>, <kbd>bbt off</kbd>.</p>
+    <div class="row big"><button class="btn pri" id="start">▶ Start</button><button class="btn" id="pause" disabled>❚❚ Pause</button><button class="btn" id="reset">↺ Reset</button><button class="btn" id="fsBtn" title="Full screen with giant numbers, for projectors (F)">⛶ Full screen</button></div>
+    <p class="landed" id="landed" hidden aria-hidden="true"></p>
+    <p class="giant-hint" aria-hidden="true">Space: start or pause · F or Esc: leave full screen</p>
+    <p class="sr" id="live" aria-live="polite"></p>
+  </section>
+  <aside class="names plans" id="plans" hidden aria-label="Lesson plan">
+    <div class="ph"><h2>Lesson plan</h2><button class="btn x" data-close="plans" aria-label="Close the lesson plan" title="Close (Esc)">✕</button></div>
+    <p class="hint">A run of timers that moves on by itself, with a chime and what’s next: such as Do now, Group work, Pack up.</p>
+    <label class="fld">Plan name <input id="planName" maxlength="40" placeholder="Science lesson"></label>
+    <ol class="steps" id="steps" aria-label="Steps"></ol>
+    <div class="row"><button class="btn" id="addStep">+ Add a step</button><span class="hint" id="planTotal"></span></div>
+    <div class="row"><button class="btn pri" id="planStart">▶ Start the plan</button><button class="btn" id="planSave">Save</button></div>
+    <div class="row"><label class="fld grow">My plans <select id="planSaved"><option value="">Choose a saved plan…</option></select></label><button class="btn x" id="planDel" aria-label="Delete the chosen plan" title="Delete">🗑</button></div>
+    <details class="share"><summary>Share and find plans</summary>
+      <div class="row wrap"><button class="btn" id="planLink">Copy a link</button><button class="btn" id="planExport">Download</button><button class="btn" id="planImportBtn">Open a plan file</button><input type="file" id="planImport" accept=".json,application/json" hidden></div>
+      <label class="fld">Paste a plan link <input id="planPaste" placeholder="https://…#plan=…"></label>
+      <div class="row wrap"><button class="btn" id="planSubmit">Share with other teachers</button><button class="btn" id="planBrowse">Browse shared plans</button></div>
+      <p class="hint">Sharing sends only the plan’s name, step names and times. Shared plans are checked before they appear in the library. Sharing uses a free GitHub account; without one, use “Recommend a flavour or request a feature” at the foot of the page.</p>
+      <div id="gallery"></div>
+    </details>
+    <p class="hint" id="planMsg" role="status"></p>
+  </aside>
+  <aside class="names" id="names" hidden aria-label="Picker">
+    <div class="ph"><h2>Picker</h2><button class="btn x" data-close="names" aria-label="Close the picker" title="Close (Esc)">✕</button></div>
+    <div class="seg" role="group" aria-label="Pick from"><button class="btn" id="mNames" aria-pressed="true">Names</button><button class="btn" id="mNums" aria-pressed="false">Numbers</button></div>
+    <div id="namesBox">
+      <p class="hint">Paste names: one per line, or separated by commas, spaces or tabs.</p>
+      <textarea id="list" rows="8" spellcheck="false" placeholder="Aisyah&#10;Ben&#10;Chen Wei&#10;Devi" aria-label="Names to pick from"></textarea>
+      <div class="row"><label class="fld">Separated by <select id="sep"><option value="auto">Detect for me</option><option value="lines">New lines</option><option value="commas">Commas</option><option value="spaces">Spaces</option></select></label><label class="sw"><input type="checkbox" id="hideList"> Hide the list</label></div>
+      <p class="hint" id="hiddenNote" hidden>The list is hidden, so the class can’t see it.</p>
+    </div>
+    <div id="numsBox" hidden><p class="hint">For register or ID numbers: pick a number in a range.</p><div class="row"><label class="fld">From <input id="numFrom" type="number" value="1" min="0" step="1"></label><label class="fld">To <input id="numTo" type="number" value="30" min="1" step="1"></label></div></div>
+    <p class="count" id="count" aria-live="polite">0 to pick from</p>
+    <label class="sw"><input type="checkbox" id="noRepeat" checked> Don’t pick the same one twice</label>
+    <div class="row"><button class="btn pri" id="pick">🧋 Pick</button><button class="btn" id="resetPicks">↺ Put all back</button></div>
+    <p class="hint">Or click the straw.</p>
+    <details><summary>Picked so far (<span id="pickedN">0</span>)</summary><ol id="picked"></ol><button class="btn" id="clearList">Clear the name list</button></details>
+  </aside>
+</main>
+<div class="welcome" id="welcome" hidden role="dialog" aria-modal="true" aria-labelledby="wT"><div>
+  <h2 id="wT">Welcome to Brain Boost Time(r)</h2>
+  <ol><li><b>Start a timer:</b> choose a time and press Start (or Space). Watch the ice melt.</li><li><b>Pick someone:</b> open the Picker, add names or numbers, then click the straw.</li><li><b>Plan a lesson:</b> open Lesson plan for timers that move on by themselves.</li></ol>
+  <p class="hint ext-only">The toolbar icon shows the time left, and its menu has everything else.</p>
+  <button class="btn pri" id="wOk">Let’s go</button></div></div>
+<footer class="foot"><button class="linkish" id="suggest" type="button">Recommend a flavour or request a feature from the developer</button></footer>
+<dialog class="sugg" id="suggestDlg" aria-labelledby="suggT">
+  <form method="dialog" id="suggForm">
+    <h2 id="suggT">Recommend a flavour or request a feature</h2>
+    <p class="hint">Your message goes to the developer, Suhaimi, by email. Nothing is sent until you send it yourself.</p>
+    <fieldset class="seg2"><legend class="hint">It’s about</legend>
+      <label><input type="radio" name="kind" value="flavour" checked> A new flavour</label><label><input type="radio" name="kind" value="feature"> A feature</label><label><input type="radio" name="kind" value="problem"> Something not working</label></fieldset>
+    <label class="fld">Your message<textarea id="suggText" rows="5" placeholder="For a flavour, its name and colours help, such as “Ube: purple and cream”."></textarea></label>
+    <div class="row wrap"><button class="btn pri" type="button" data-send="gmail">Open in Gmail</button><button class="btn" type="button" data-send="outlook">Open in Outlook</button><button class="btn" type="button" data-send="app">My email app</button><button class="btn" type="button" data-send="copy">Copy message</button></div>
+    <p class="hint" id="suggStatus" aria-live="polite"></p>
+    <div class="row"><button class="btn" value="close">Close</button></div>
+  </form>
+</dialog>
+<div class="done" id="done" hidden role="alertdialog" aria-labelledby="doneT"><div><h2 id="doneT">Time’s up!</h2><p id="doneMsg"></p><button class="btn pri" id="doneOk">OK</button></div></div>
+<script src="bbt.js"></script>
+<script src="more.js"></script>
+</body>
+</html>

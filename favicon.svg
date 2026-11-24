@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Brain Boost Time(r)">
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="#00bcd4"/>
+  <polygon points="77,6 89,6 72,52 61,52" fill="#e91e63"/>
+  <polygon points="31,38 97,38 87,115 41,115" fill="#f5f0e8"/>
+  <polygon points="35,54 93,54 86,112 42,112" fill="#c8966a"/>
+  <rect x="26" y="33" width="76" height="9" rx="4" fill="#ffffff"/>
+  <g fill="#2b1b14"><circle cx="51" cy="102" r="6"/><circle cx="64" cy="106" r="6"/><circle cx="77" cy="102" r="6"/><circle cx="57" cy="92" r="6"/><circle cx="71" cy="92" r="6"/></g>
+</svg>

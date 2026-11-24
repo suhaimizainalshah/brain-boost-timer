@@ -1,0 +1,136 @@
+{
+ "about": "Shared lesson plans for Brain Boost Time(r). To add one, append it to this list after checking it (see the README).",
+ "plans": [
+  {
+   "name": "Standard 60-minute lesson",
+   "about": "A starter, teaching, practice and a brain break, then a plenary.",
+   "by": "Suhaimi",
+   "steps": [
+    [
+     "Do now",
+     300
+    ],
+    [
+     "Teach",
+     900
+    ],
+    [
+     "Practice",
+     1200
+    ],
+    [
+     "Brain Boost break",
+     180
+    ],
+    [
+     "Apply it",
+     600
+    ],
+    [
+     "Plenary",
+     300
+    ]
+   ]
+  },
+  {
+   "name": "Group work rounds",
+   "about": "Three rotations with quick changeovers, for stations or jigsaw groups.",
+   "by": "Suhaimi",
+   "steps": [
+    [
+     "Round 1",
+     480
+    ],
+    [
+     "Swap",
+     60
+    ],
+    [
+     "Round 2",
+     480
+    ],
+    [
+     "Swap",
+     60
+    ],
+    [
+     "Round 3",
+     480
+    ],
+    [
+     "Share back",
+     300
+    ]
+   ]
+  },
+  {
+   "name": "Exam practice",
+   "about": "Reading time, writing in blocks, a stretch, then checking.",
+   "by": "Suhaimi",
+   "steps": [
+    [
+     "Reading time",
+     300
+    ],
+    [
+     "Section A",
+     1200
+    ],
+    [
+     "Stretch",
+     60
+    ],
+    [
+     "Section B",
+     1200
+    ],
+    [
+     "Check your answers",
+     300
+    ]
+   ]
+  },
+  {
+   "name": "Focus and break (25/5)",
+   "about": "Two rounds of 25 minutes of focus with 5-minute breaks, for self-study.",
+   "by": "Suhaimi",
+   "steps": [
+    [
+     "Focus",
+     1500
+    ],
+    [
+     "Break",
+     300
+    ],
+    [
+     "Focus",
+     1500
+    ],
+    [
+     "Break",
+     300
+    ]
+   ]
+  },
+  {
+   "name": "Think, pair, share",
+   "about": "Quiet thinking, discussion in pairs, then sharing with the class.",
+   "by": "Suhaimi",
+   "steps": [
+    [
+     "Think",
+     120
+    ],
+    [
+     "Pair",
+     240
+    ],
+    [
+     "Share",
+     360
+    ]
+   ]
+  }
+ ]
+}

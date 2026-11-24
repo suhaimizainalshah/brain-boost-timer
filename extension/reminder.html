@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Time for a break: Brain Boost Time(r)</title><link rel="icon" href="icons/logo.svg" type="image/svg+xml"><link rel="icon" href="icons/icon32.png" type="image/png" sizes="32x32"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#00bcd4;color:#0b2b30;font:17px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}
+main{padding:22px;max-width:380px}h1{font-size:22px;margin:10px 0 6px}p{margin:0 0 16px}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:10px 18px;cursor:pointer}
+.pri{background:#0b2b30;color:#fff}.sec{background:rgba(255,255,255,.8);color:#0b2b30}button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+svg{width:120px;height:150px}
+@media (prefers-reduced-motion:no-preference){svg{animation:bob 2.4s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-6px)}}}
+</style></head>
+<body><main>
+<svg viewBox="0 0 120 150" aria-hidden="true"><polygon points="72,2 82,2 70,60 61,60" fill="#e91e63"/><rect x="18" y="38" width="84" height="10" rx="4" fill="#fff"/><polygon points="22,48 98,48 88,145 32,145" fill="#f5f0e8"/><polygon points="26,66 94,66 87,142 33,142" fill="#c8966a"/><g fill="#2b1b14"><circle cx="46" cy="130" r="6"/><circle cx="60" cy="134" r="6"/><circle cx="74" cy="130" r="6"/><circle cx="53" cy="120" r="6"/><circle cx="67" cy="120" r="6"/></g></svg>
+<h1 id="h">You’ve been on this browser for an hour</h1>
+<p>Why not take a break with Brain Boost Time? Stand up, stretch, look away from the screen and have some water.</p>
+<div class="row"><button class="pri" id="go" autofocus>Start a 5-minute break</button><button class="sec" id="snooze">Remind me in 10 minutes</button>
+    <button class="sec" id="later">Not now</button></div>
+</main><script src="reminder.js"></script></body></html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Brain Boost Time(r)</title>
+<style>
+:root{--bg:#fff;--ink:#0b2b30;--muted:#4a6670;--line:#cde9ee;--soft:#eafcff;--acc:#00838f;--acc-ink:#fff;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#14272c;--ink:#e6f6f8;--muted:#a3c2c8;--line:#24424a;--soft:#0d1b1f;--acc:#4dd0e1;--acc-ink:#002024;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;width:300px;background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{display:flex;align-items:center;gap:8px;padding:12px 14px 8px}header img{width:28px;height:28px}header b{font-size:15px}
+main{display:grid;gap:10px;padding:0 14px 14px}.btn{font:inherit;font-weight:650;border:1px solid var(--line);background:var(--bg);color:inherit;border-radius:10px;padding:8px 10px;cursor:pointer}.btn:hover{border-color:var(--acc)}
+.pri{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);padding:10px}.row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.row .btn{padding:8px 2px;white-space:nowrap}#mine{grid-template-columns:1fr 1fr}#mine:empty{display:none}#mine .btn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:8px 6px}
+.card{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--soft)}.sw{display:flex;align-items:center;gap:8px;font-weight:650;cursor:pointer}.sw input{width:18px;height:18px}
+.hint{margin:4px 0 0;color:var(--muted);font-size:12.5px}label.fld{display:grid;gap:4px;font-size:12.5px;color:var(--muted);font-weight:650}select{font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}.running{display:grid;gap:8px}.running[hidden]{display:none}#rtStep[hidden],#rtNext[hidden]{display:none}#rtStep{margin:0}.rt{display:flex;align-items:baseline;gap:8px}.rt b{font-size:26px;font-variant-numeric:tabular-nums}.row3{display:grid;grid-template-columns:1fr 1fr;gap:6px}h2{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:2px 0 -4px}
+</style></head>
+<body>
+<header><img src="icons/icon48.png" alt="" id="logo"><b>Brain Boost Time(r)</b></header>
+<main>
+  <div class="card running" id="running" hidden><div class="rt"><b id="rtTime">0:00</b><span id="rtMsg" class="hint"></span></div>
+    <p class="hint" id="rtStep" hidden></p><div class="row3"><button class="btn" id="rtPause">❚❚ Pause</button><button class="btn" id="rtStop">■ Stop</button></div><button class="btn" id="rtNext" hidden>Next step ▸</button></div>
+  <button class="btn pri" id="big">Open the big screen</button>
+  <h2>Your timers and quick timers</h2>
+  <div class="row" id="mine"></div>
+  <div class="row"><button class="btn" data-s="60">1 min</button><button class="btn" data-s="180">3 min</button><button class="btn" data-s="300">5 min</button><button class="btn" data-s="600">10 min</button></div>
+  <button class="btn" id="pick">🧋 Pick a name or number</button>
+  <div class="card"><label class="sw"><input type="checkbox" id="remind"> Hourly break reminders</label><p class="hint" id="next"></p>
+    <p class="hint">The toolbar icon is in colour when reminders are on, and grey when they’re off.</p></div>
+  <p class="hint">While a timer runs, its time shows on the icon. Alt+Shift+B opens the big screen; right-click the icon for more.</p>
+</main>
+<script src="menu.js"></script>
+</body></html>

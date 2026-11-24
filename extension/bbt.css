@@ -63,3 +63,9 @@ body.giant main{grid-template-columns:minmax(0,1fr) minmax(0,2fr);min-height:100
 body.giant .timer #time{font-size:min(calc(94cqi / var(--w, 2.1)), 58vh)!important;line-height:1;white-space:nowrap}
 body.giant .timer #msg{font-size:min(6cqi,6vh)}body.giant .stepline{font-size:min(3.2cqi,3.4vh)}
 body.giant .giant-hint{display:block;position:fixed;bottom:12px;left:0;right:0;text-align:center;font-size:13px;color:var(--muted);opacity:.75}
+
+/* the header buttons show which panel is open; panels sit beside the timer, at the top */
+header .btn[aria-expanded="true"]{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+main>.names{align-self:start}
+.btn svg.ic{width:1.05em;height:1.05em;vertical-align:-.14em;margin-right:.35em}
+.names .row{justify-content:flex-start}

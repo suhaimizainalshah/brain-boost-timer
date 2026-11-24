@@ -12,7 +12,12 @@ const pmsg = t => { $("#planMsg").textContent = ""; setTimeout(() => $("#planMsg
 /* ---------- panels: open, close (✕ or Esc) ---------- */
 const panels = { plans: "#planBtn", names: "#namesBtn", settings: "#setBtn" };
 const opened = []; // the order panels were opened, so Esc closes the latest
-for (const id of Object.keys(panels)) new MutationObserver(() => { const i = opened.indexOf(id); if (i >= 0) opened.splice(i, 1); if (!$("#" + id).hidden) opened.push(id); }).observe($("#" + id), { attributes: true, attributeFilter: ["hidden"] });
+const SIDE = ["plans", "names"]; // these share the space beside the timer, like tabs: only one shows at a time
+for (const id of Object.keys(panels)) new MutationObserver(() => { const i = opened.indexOf(id); if (i >= 0) opened.splice(i, 1);
+  if ($("#" + id).hidden) return; opened.push(id);
+  if (SIDE.includes(id)) for (const other of SIDE) if (other !== id && !$("#" + other).hidden) { $("#" + other).hidden = true; $(panels[other])?.setAttribute("aria-expanded", "false"); }
+  if (SIDE.includes(id) && !matchMedia("(prefers-reduced-motion: reduce)").matches && S.motion !== false) $("#" + id).animate([{ opacity: 0, transform: "translateX(12px)" }, { opacity: 1, transform: "none" }], { duration: 180, easing: "ease-out" });
+}).observe($("#" + id), { attributes: true, attributeFilter: ["hidden"] });
 const show = (id, on) => { const p = $("#" + id); p.hidden = !on; $(panels[id])?.setAttribute("aria-expanded", String(on)); };
 $("#planBtn").onclick = () => show("plans", $("#plans").hidden);
 document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => { show(b.dataset.close, false); $(panels[b.dataset.close])?.focus(); });

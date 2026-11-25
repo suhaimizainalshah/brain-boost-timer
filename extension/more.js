@@ -39,7 +39,7 @@ document.addEventListener("fullscreenchange", () => { document.body.classList.to
 
 /* ---------- the chime, settings from the right-click menu, and the weekly count ---------- */
 S.chime ||= "chime"; $("#chime").value = S.chime;
-$("#chime").onchange = () => { S.chime = $("#chime").value; save(); sound("chime"); };
+$("#chime").onchange = () => { S.chime = $("#chime").value; save(); sound("chime"); if (location.protocol === "chrome-extension:") chrome.storage.local.set({ settings: S }); }; // the reminder window uses the same chime
 store.on(ch => { if (!ch.settings) return; const n = ch.settings; for (const k of ["sound", "motion", "remember", "openAs"]) if (k in n && n[k] !== S[k]) { S[k] = n[k]; const el = $("#" + k); if (el) el.type === "checkbox" ? el.checked = n[k] : el.value = n[k]; } if ("stats" in ch) week(); });
 async function week() { const { stats = {} } = await store.get("stats"), since = new Date(Date.now() - 6 * 864e5).toISOString().slice(0, 10), n = Object.entries(stats).filter(([d]) => d >= since).reduce((a, [, v]) => a + v, 0);
   $("#weekCount").textContent = n ? `${n} timer${n === 1 ? "" : "s"} finished this week (kept on this device)` : ""; }

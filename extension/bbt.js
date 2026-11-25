@@ -42,7 +42,7 @@ const FLAVOURS = [
   ["grape", "Grape", "#DCC2F4", "#7B4BB7", "#5B2A86"], ["blue", "Blue raspberry", "#B5EDFF", "#2D9CDB", "#1565C0"],
   ["sunset", "Sunset (mango and strawberry)", "#FFD36E", "#F05D82", "#C81D3A"], ["ocean", "Ocean (blue and lychee)", "#E3F7FF", "#3A86FF", "#1D3557"]];
 const BOBA = { black: "#16100c", brown: "#3B2416", grey: "#6b6b6b" };
-const D = { remember: true, rememberMsg: true, flavour: "classic", boba: "black", sound: true, motion: true, noRepeat: true, sep: "auto", names: "", pickedNames: [], pickedNums: [], mode: "names", numFrom: 1, numTo: 30, hideList: false, tilt: 0, seed: 7, openAs: "window" };
+const D = { remember: true, rememberMsg: true, flavour: "classic", boba: "black", sound: true, remindSound: true, motion: true, noRepeat: true, sep: "auto", names: "", pickedNames: [], pickedNums: [], mode: "names", numFrom: 1, numTo: 30, hideList: false, tilt: 0, seed: 7, openAs: "window" };
 let S = { ...D }, T = null, chosen = 300, doneShown = false;
 const reduce = () => !S.motion || matchMedia("(prefers-reduced-motion: reduce)").matches;
 const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), toHex = a => "#" + a.map(v => Math.round(v).toString(16).padStart(2, "0")).join("");
@@ -121,7 +121,7 @@ function tick() {
     else if (T.plan) finish("Plan complete!", `“${T.plan.name}”: all ${T.plan.steps.length} steps done.`); else finish(); }
   if (T && T.paused == null && left > 0 && Date.now() - lastSay > 60000) { lastSay = Date.now(); say(`${fmt(left)} left`); }
 }
-function finish(title = "Time’s up!", text) { doneShown = true; window.onFinished?.(); $("#doneT").textContent = title; $("#doneMsg").textContent = text || T?.message || "Time for Brain Boost Time! Stretch, breathe and have a drink of water."; $("#done").hidden = false; $("#doneOk").focus(); sound("chime"); say(title + " " + $("#doneMsg").textContent);
+function finish(title = "Time’s up!", text, quiet = false) { doneShown = true; window.onFinished?.(); $("#doneT").textContent = title; $("#doneMsg").textContent = text || T?.message || "Time for Brain Boost Time! Stretch, breathe and have a drink of water."; $("#done").hidden = false; $("#doneOk").focus(); (quiet || sound("chime")); say(title + " " + $("#doneMsg").textContent);
   if (!EXT && "Notification" in window && Notification.permission === "granted" && document.hidden) new Notification("Brain Boost Time(r)", { body: $("#doneMsg").textContent, icon: ASSET + "icons/icon128.png" }); }
 $("#doneOk").onclick = async () => { $("#done").hidden = true; if (/Time’s up!|Plan complete!/.test($("#doneT").textContent)) await store.set({ timer: null }); };
 $("#start").onclick = async () => { const custom = parseTime($("#custom").value || ""), secs = custom || chosen; if (!secs) return; doneShown = false; await startTimer(secs, $("#message").value.trim()); say(`Timer started: ${fmt(secs)}`); };
@@ -183,6 +183,7 @@ $("#namesBtn").onclick = () => toggle("#namesBtn", "#names"); $("#setBtn").oncli
 $("#flavour").innerHTML = FLAVOURS.map(f => `<option value="${f[0]}">${f[1]}</option>`).join("");
 for (const k of ["flavour", "boba"]) $("#" + k).onchange = () => { S[k] = $("#" + k).value; save(); drawPearls(); drawTea(); };
 for (const k of ["sound", "motion"]) $("#" + k).onchange = () => { S[k] = $("#" + k).checked; save(); };
+$("#remindSound").onchange = async () => { S.remindSound = $("#remindSound").checked; save(); if (EXT) await chrome.storage.local.set({ settings: S }); if (S.remindSound) sound("chime"); }; // the reminder window reads it from the extension’s storage
 for (const k of ["remember", "rememberMsg"]) $("#" + k).onchange = async () => { S[k] = $("#" + k).checked; save(); if (EXT) await chrome.storage.local.set({ settings: S }); // the background reads these
   if (!S.remember) { await store.set({ timerHistory: [] }); say("Timers won’t be remembered, and the list was cleared."); }
   else if (!S.rememberMsg) { const { timerHistory = [] } = await store.get("timerHistory"); await store.set({ timerHistory: timerHistory.map(x => ({ ...x, m: "" })) }); say("Messages won’t be remembered, and saved ones were removed."); }
@@ -210,7 +211,7 @@ addEventListener("keydown", e => { if (/INPUT|TEXTAREA|SELECT/.test(document.act
 
 /* ---------- on the website: an in-page break reminder, and a shake to stir on phones ---------- */
 let webMinutes = 0;
-if (!EXT) { setInterval(() => { if (!$("#remind").checked || document.hidden) return; if (++webMinutes >= 60) { webMinutes = 0; finish("Time for a break", "You’ve been here for an hour. Why not take a Brain Boost Time break? Stand up, stretch and have some water."); } }, 60000);
+if (!EXT) { setInterval(() => { if (!$("#remind").checked || document.hidden) return; if (++webMinutes >= 60) { webMinutes = 0; finish("Time for a break", "You’ve been here for an hour. Why not take a Brain Boost Time break? Stand up, stretch and have some water.", S.remindSound === false); } }, 60000);
   let lastShake = 0; addEventListener("devicemotion", e => { const a = e.accelerationIncludingGravity; if (!a) return; const f = Math.abs(a.x || 0) + Math.abs(a.y || 0) + Math.abs(a.z || 0); if (f > 32 && Date.now() - lastShake > 2000) { lastShake = Date.now(); stir(); } }); }
 
 /* ---------- sound ---------- */
@@ -231,7 +232,7 @@ store.on(ch => { if ("timerHistory" in ch) drawRecent(ch.timerHistory || []); if
   const st = await store.get(["settings", "timer", "remind", "timerHistory"]), saved = st.settings || {};
   if (saved.picked && !saved.pickedNames) saved.pickedNames = saved.picked; // from version 2.0
   S = { ...D, ...saved }; T = st.timer || null;
-  $("#flavour").value = S.flavour; $("#boba").value = S.boba; $("#sound").checked = S.sound; $("#motion").checked = S.motion; $("#noRepeat").checked = S.noRepeat; $("#sep").value = S.sep; $("#list").value = S.names; $("#hideList").checked = S.hideList; $("#remember").checked = S.remember; $("#rememberMsg").checked = S.rememberMsg; $("#rememberMsg").disabled = !S.remember;
+  $("#flavour").value = S.flavour; $("#boba").value = S.boba; $("#sound").checked = S.sound; $("#remindSound").checked = S.remindSound !== false; $("#motion").checked = S.motion; $("#noRepeat").checked = S.noRepeat; $("#sep").value = S.sep; $("#list").value = S.names; $("#hideList").checked = S.hideList; $("#remember").checked = S.remember; $("#rememberMsg").checked = S.rememberMsg; $("#rememberMsg").disabled = !S.remember;
   $("#numFrom").value = S.numFrom; $("#numTo").value = S.numTo; $("#openAs").value = S.openAs; $("#remind").checked = st.remind !== false;
   if (!EXT) document.querySelector('label.sw:has(#remind)')?.lastChild && (document.querySelector('label.sw:has(#remind)').lastChild.textContent = " Hourly break reminder");
   document.querySelector('[data-s="300"]').setAttribute("aria-pressed", "true"); drawPearls(); placeStraw(); drawPicker(); suggestLink(); drawRecent(st.timerHistory || []);

@@ -24,6 +24,7 @@ async function init() {
     chrome.contextMenus.create({ id: "remind", title: "Hourly break reminders", type: "checkbox", checked: remind, contexts: ["action"] });
     chrome.contextMenus.create({ id: "set", title: "Settings", contexts: ["action"] });
     chrome.contextMenus.create({ id: "set:sound", parentId: "set", title: "Sound", type: "checkbox", checked: settings.sound !== false, contexts: ["action"] });
+    chrome.contextMenus.create({ id: "set:remindSound", parentId: "set", title: "Chime for break reminders", type: "checkbox", checked: settings.remindSound !== false, contexts: ["action"] });
     chrome.contextMenus.create({ id: "set:motion", parentId: "set", title: "Animation", type: "checkbox", checked: settings.motion !== false, contexts: ["action"] });
     chrome.contextMenus.create({ id: "set:remember", parentId: "set", title: "Remember my timers", type: "checkbox", checked: settings.remember !== false, contexts: ["action"] });
     chrome.contextMenus.create({ id: "set:sep", parentId: "set", type: "separator", contexts: ["action"] });
@@ -164,4 +165,4 @@ chrome.storage.onChanged.addListener((ch, area) => { if (area === "local" && "ti
 
 // keep the right-click ticks in step when settings change on the big screen
 chrome.storage.onChanged.addListener((ch, area) => { if (area !== "local" || !ch.settings?.newValue) return; const s = ch.settings.newValue, u = (id, checked) => chrome.contextMenus.update(id, { checked }, () => chrome.runtime.lastError);
-  u("set:sound", s.sound !== false); u("set:motion", s.motion !== false); u("set:remember", s.remember !== false); u("set:window", s.openAs !== "tab"); u("set:tab", s.openAs === "tab"); });
+  u("set:sound", s.sound !== false); u("set:remindSound", s.remindSound !== false); u("set:motion", s.motion !== false); u("set:remember", s.remember !== false); u("set:window", s.openAs !== "tab"); u("set:tab", s.openAs === "tab"); });

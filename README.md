@@ -79,6 +79,9 @@ Nothing leaves your browser. Settings and names are kept in Chrome’s local sto
 
 
 
+## Reminder sound
+The hourly break reminder plays your chosen chime (chime, bell or soft). Switch it on or off under **Flavour and settings**, in the right-click menu under **Settings**, or with the **Sound** button on the reminder itself. The setting is called **Chime for break reminders**, and it is on unless you turn it off.
+
 ## Break ideas
 Fourteen ready-made breaks in four kinds, each with a suggested length and simple steps, plus your own:
 - **Move**, such as stretching, jogging on the spot or walk and talk.
